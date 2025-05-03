@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countdown with Two Rabbits</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: white;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #countdown {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #333;
+      text-align: center;
+      margin-bottom: 2rem;
+      z-index: 2;
+    }
+
+    .rabbit-wrapper {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+    }
+
+    .rabbit-white-wrapper {
+      bottom: 16px;
+      left: 16px;
+    }
+
+    .rabbit-brown-wrapper {
+      bottom: 16px;
+      right: 16px;
+    }
+
+    .rabbit {
+      width: 200px;
+      height: 200px;
+      background-repeat: no-repeat;
+      background-size: 600px 200px; /* 3 frames in 1 row */
+    }
+
+    .rabbit-white {
+      background-image: url('rabbitw.png');
+    }
+
+    .rabbit-brown {
+      background-image: url('rabbitb.png');
+    }
+
+    .grass {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 64px;
+      background: #228b22;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="countdown"></div>
+  <div class="grass"></div>
+  <div class="rabbit-wrapper rabbit-white-wrapper">
+    <div class="rabbit rabbit-white"></div>
+  </div>
+  <div class="rabbit-wrapper rabbit-brown-wrapper">
+    <div class="rabbit rabbit-brown"></div>
+  </div>
+
+  <script>
+    const target = new Date(2025, 7, 27).getTime();
+
+    function updateCountdown() {
+      const now = Date.now();
+      const diff = Math.max(target - now, 0);
+      const days = Math.floor(diff / 86400000);
+      const hrs  = Math.floor((diff % 86400000) / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+      document.getElementById('countdown').textContent =
+        `${days} ימים ${String(hrs).padStart(2,'0')}:` +
+        `${String(mins).padStart(2,'0')}:` +
+        `${String(secs).padStart(2,'0')}`;
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // 3-frame animation (slower)
+    const rabbits = document.querySelectorAll('.rabbit');
+    let frame = 0;
+    setInterval(() => {
+      const x = -frame * 200;
+      rabbits.forEach(rabbit => {
+        rabbit.style.backgroundPosition = `${x}px 0`;
+      });
+      frame = (frame + 1) % 3;
+    }, 200); // slower: ~3 frames per second
+  </script>
+</body>
+</html>
